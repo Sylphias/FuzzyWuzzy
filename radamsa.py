@@ -1,22 +1,31 @@
 import subprocess
-def send_hue_packet():
-    hue_http = "https://www.meethue.com/api/nupup"
+import requests
+# This method is used to generate the fuzzing inputs to be used on the endpoint of the device. note that it can be customized based on a set of input list
+def generate_hue_inputs():
     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
-    inputs_list = {}
-    
-    hue_inputs = {}
-    # Generate all the possible rando
-    for key,value in inputs_list.iteritems():
-        proc = subprocess.Popen(["radamsa","-n 1000"],stdin=inputs_list[key], stdout=subprocess.PIPE)
-        (out, err) = proc.communicate()
+    inputs_list = {"MAC Address":"01:02:03:04:05", "on": "False"}
 
+    hue_inputs = {}
+    # Generate all the possible random outputs for each possible input for philips HUE api endpoint to the bridge
+    for key,value in inputs_list.iteritems():
+        # Run radamsa fuzzer
+        p1 = subprocess.Popen(["echo",inputs_list[key]],stdout= subprocess.PIPE)
+        proc = subprocess.Popen(["radamsa","-n","1000"],stdin=p1.stdout, stdout=subprocess.PIPE)
+        p1.stdout.close();
+        (out, err) = proc.communicate()
+        # Now we have a thousand fuzzed inputs to pump into the HUE to test.
+        hue_inputs[key] = out.splitlines()
+    return hue_inputs()
+def send_hue_packet(url):
+    requests.post(url,)
 
 if __name__ == "__main__" :
-    while(True):
-        try:
-            send_hue_packet()
-        except KeyboardInterrupt:
-            pass
+    send_hue_packet()
+    # while(True):
+    #     try:
+    #         send_hue_packet()
+    #     except KeyboardInterrupt:
+    #         pass
 
 
 
