@@ -23,10 +23,15 @@ def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
     success_log_file = open("fuzzlog_success"+timestart +".txt", "a+")
     # Create a data packet to send to the hue api
     # light_no = random.randint(1,3)
-    r = requests.put(url+endpoint+"1"+option, data=json.dumps(fuzz_data,ensure_ascii=False), headers=headers)
+    try:
+        r = requests.put(url + endpoint + "1" + option, data=json.dumps(fuzz_data, ensure_ascii=False), headers=headers)
+    except:
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : 'CONNECTION ERROR' }\n")
+        return
     try:
         decoded_response = json.JSONDecoder().decode(r.text)
     except:
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : UNEXPECTED RESPONSE >> "+ r.text +" }\n")
         return
     has_success = False
     for item in decoded_response:
