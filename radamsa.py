@@ -31,7 +31,7 @@ def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
     try:
         decoded_response = json.JSONDecoder().decode(r.text)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : UNEXPECTED RESPONSE >> "+ r.text +" }\n")
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : 'UNEXPECTED RESPONSE >> "+ r.text +"' }\n")
         return
     has_success = False
     for item in decoded_response:
