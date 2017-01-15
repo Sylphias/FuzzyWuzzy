@@ -13,7 +13,8 @@ def generate_hue_inputs(input_list):
         ap = antiparser()
         ap.setDebug(False)
         for x in range(100):
-            newdata = apShort() # generate long inputs
+            newdata = apShort() # generate short inputs
+            newdata.setMaxSize(65535) if key == "hue" else newdata.setMaxSize(255)
             ap.append(newdata)
         ap.permute()
         hue_inputs[key] = []
@@ -85,17 +86,25 @@ def party_lights():
 
 # def verify_oracle(response):
 
-if __name__ == "__main__" :
-    # this is to store the types of input that we will be fuzzing and generate variations of these inputs
-    timestart = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m%-d%H%M%S')
-    while(True):
-        try:
-            hue = random.randint(0, 65535)
-            sat = random.randint(0, 255)
-            bri = random.randint(0, 255)
-            on = bool(random.getrandbits(1))
-            inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
-            send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
-        except (KeyboardInterrupt, SystemExit):
-            generate_excel_format(timestart)
-            pass
+# if __name__ == "__main__" :
+#     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
+#     timestart = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m%-d%H%M%S')
+#     while(True):
+#         try:
+#             hue = random.randint(0, 65535)
+#             sat = random.randint(0, 255)
+#             bri = random.randint(0, 255)
+#             on = bool(random.getrandbits(1))
+#             inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
+#             send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
+#         except (KeyboardInterrupt, SystemExit):
+#             generate_excel_format(timestart)
+#             pass
+
+hue = random.randint(0, 65535)
+sat = random.randint(0, 255)
+bri = random.randint(0, 255)
+on = bool(random.getrandbits(1))
+inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
+
+print generate_hue_inputs(inputs_list)
