@@ -26,12 +26,12 @@ def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
     try:
         r = requests.put(url + endpoint + "1" + option, data=json.dumps(fuzz_data, ensure_ascii=False), headers=headers)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['CONNECTION ERROR >> "+sys.exc_info()[0]+"'] }\n")
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['CONNECTION ERROR >> "+ str(sys.exc_info()[0]) +"'] }\n")
         return
     try:
         decoded_response = json.JSONDecoder().decode(r.text)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['UNEXPECTED RESPONSE: ERROR >> "+ sys.exc_info()[0]+" Contains >> "+ r.text +"'] }\n")
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['UNEXPECTED RESPONSE: ERROR >> "+ str(sys.exc_info()[0])+" Contains >> "+ r.text +"'] }\n")
         return
     has_success = False
     for item in decoded_response:
