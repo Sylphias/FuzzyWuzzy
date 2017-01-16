@@ -26,12 +26,12 @@ def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
     try:
         r = requests.put(url + endpoint + "1" + option, data=json.dumps(fuzz_data, ensure_ascii=False), headers=headers)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : 'CONNECTION ERROR' }\n")
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['CONNECTION ERROR >> "+sys.exc_info()[0]+"'] }\n")
         return
     try:
         decoded_response = json.JSONDecoder().decode(r.text)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : 'UNEXPECTED RESPONSE >> "+ r.text +"' }\n")
+        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['UNEXPECTED RESPONSE: ERROR >> "+ sys.exc_info()[0]+" Contains >> "+ r.text +"'] }\n")
         return
     has_success = False
     for item in decoded_response:
@@ -52,18 +52,25 @@ def write_format(file_input,url,endpoint,option,data,headers):
 
 
 def generate_excel_format(timestamp):
-    o = open("fuzzlog_excel"+timestamp+ ".txt","w+")
-    logfile = open("fuzzlog_" + timestamp + ".txt", "r+")
-    o.write("endpoint\tinput\tresult\tfull_contents\n")
-    for line in logfile.readlines():
-        decoded_line = ast.literal_eval(line)
-        input_data = decoded_line['data']
-        output_data = decoded_line['contents']
-        # The order in which the input is given is the same order as the output data (ASSUMPTION FROM DATA COLLECTED, to make code more efficient)
-        count = 0
-        for key,value in input_data.iteritems():
-            o.write(key+"\t"+repr(value)+"\t"+repr(output_data[count].keys()[0])+"\t"+str(output_data[count])+'\n')
+    try:
+        o = open("fuzzlog_excel"+timestamp+ ".txt","w+")
+        logfile = open("fuzzlog_" + timestamp + ".txt", "r+")
+        o.write("endpoint\tinput\tresult\tfull_contents\n")
+        for line in logfile.readlines():
+            decoded_line = ast.literal_eval(line)
+            input_data = decoded_line['data']
+            output_data = decoded_line['contents']
+            # The order in which the input is given is the same order as the output data (ASSUMPTION FROM DATA COLLECTED, to make code more efficient)
+            count = 0
+            for key,value in input_data.iteritems():
+                items = output_data[0].keys()[0] if hasattr(output_data[0], 'keys') else output_data
+                output = output_data[count] if len(output_data)-1 > count else output_data
+                o.write(key+"\t"+repr(value)+"\t"+repr(items)+"\t"+str(output)+'\n')
+                count += 1
+            o.flush()
 
+    except Exception as inst:
+            print inst
     o.close()
 
 
@@ -84,14 +91,15 @@ def party_lights():
 if __name__ == "__main__" :
     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
     timestart = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m%-d%H%M%S')
-    while(True):
-        try:
-            hue = random.randint(0, 65535)
-            sat = random.randint(0, 255)
-            bri = random.randint(0, 255)
-            on = bool(random.getrandbits(1))
-            inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
-            send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
-        except (KeyboardInterrupt, SystemExit):
-            generate_excel_format(timestart)
-            pass
+    # while(True):
+        # try:
+        #     hue = random.randint(0, 65535)
+        #     sat = random.randint(0, 255)
+        #     bri = random.randint(0, 255)
+        #     on = bool(random.getrandbits(1))
+        #     inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
+        #     send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
+        # except (KeyboardInterrupt, SystemExit):
+        #     generate_excel_format(timestart)
+            # pass
+    generate_excel_format("2017-016143528")
