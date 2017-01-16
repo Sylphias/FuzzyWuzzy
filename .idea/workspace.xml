@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f025e94e-0eda-40e6-924d-1546d57bf586" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radamsa.py" afterPath="$PROJECT_DIR$/radamsa.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,8 +23,8 @@
       <file leaf-file-name="radamsa.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/radamsa.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-480">
-              <caret line="33" column="217" lean-forward="false" selection-start-line="33" selection-start-column="217" selection-end-line="33" selection-end-column="217" />
+            <state relative-caret-position="365">
+              <caret line="104" column="45" lean-forward="false" selection-start-line="104" selection-start-column="45" selection-end-line="104" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -647,8 +646,8 @@
     <entry file="file://$PROJECT_DIR$/fuzzlog_excel2017-016140833.txt" />
     <entry file="file://$PROJECT_DIR$/radamsa.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-480">
-          <caret line="33" column="217" lean-forward="false" selection-start-line="33" selection-start-column="217" selection-end-line="33" selection-end-column="217" />
+        <state relative-caret-position="365">
+          <caret line="104" column="45" lean-forward="false" selection-start-line="104" selection-start-column="45" selection-end-line="104" selection-end-column="45" />
           <folding />
         </state>
       </provider>

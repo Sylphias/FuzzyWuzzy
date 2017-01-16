@@ -91,15 +91,15 @@ def party_lights():
 if __name__ == "__main__" :
     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
     timestart = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m%-d%H%M%S')
-    # while(True):
-        # try:
-        #     hue = random.randint(0, 65535)
-        #     sat = random.randint(0, 255)
-        #     bri = random.randint(0, 255)
-        #     on = bool(random.getrandbits(1))
-        #     inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
-        #     send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
-        # except (KeyboardInterrupt, SystemExit):
-        #     generate_excel_format(timestart)
-            # pass
-    generate_excel_format("2017-016143528")
+    while(True):
+        try:
+            hue = random.randint(0, 65535)
+            sat = random.randint(0, 255)
+            bri = random.randint(0, 255)
+            on = bool(random.getrandbits(1))
+            inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
+            send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
+        except (KeyboardInterrupt, SystemExit):
+            generate_excel_format(timestart)
+            pass
+    # generate_excel_format("2017-016143528")
