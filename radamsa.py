@@ -17,7 +17,6 @@ def generate_hue_inputs(input_list):
 
 
 def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
-
     fuzz_data = generate_hue_inputs(inputs_list);
     all_log_file = open("fuzzlog_" + timestamp + ".txt", "a+")
     success_log_file = open("fuzzlog_success"+timestart +".txt", "a+")
@@ -26,12 +25,12 @@ def send_hue_packet(url,endpoint,option,inputs_list,timestamp,headers = {}):
     try:
         r = requests.put(url + endpoint + "1" + option, data=json.dumps(fuzz_data, ensure_ascii=False), headers=headers)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['CONNECTION ERROR >> "+ str(sys.exc_info()[0]) +"'] }\n")
+        all_log_file.write("{'url':\'" + url + endpoint + "1" + option + "\','data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['CONNECTION ERROR >> "+ str(sys.exc_info()[0].message) +"'] }\n")
         return
     try:
         decoded_response = json.JSONDecoder().decode(r.text)
     except:
-        all_log_file.write("{'url':\"" + url + endpoint + "1" + option + "\",'data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['UNEXPECTED RESPONSE: ERROR >> "+ str(sys.exc_info()[0])+" Contains >> "+ r.text +"'] }\n")
+        all_log_file.write("{'url':\'" + url + endpoint + "1" + option + "\','data': " + str(fuzz_data) + ",'headers':" + str(headers) + ", 'contents' : ['UNEXPECTED RESPONSE: ERROR >> "+ str(sys.exc_info()[0].message)+" Contains >> "+ r.text +"'] }\n")
         return
     has_success = False
     for item in decoded_response:
@@ -73,7 +72,6 @@ def generate_excel_format(timestamp):
             print inst
     o.close()
 
-
 def party_lights():
     data = {}
     for count in range(0,1000):
@@ -84,9 +82,6 @@ def party_lights():
         light_no = random.randint(1,3)
         r = requests.put('http://192.168.2.139/api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/'+str(light_no)+'/state', data=json.dumps(data))
         time.sleep(0.01)
-
-# def verify_oracle(response):
-
 
 if __name__ == "__main__" :
     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
@@ -101,5 +96,5 @@ if __name__ == "__main__" :
             send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
         except (KeyboardInterrupt, SystemExit):
             generate_excel_format(timestart)
-            pass
-    # generate_excel_format("2017-016143528")
+            break
+    # generate_excel_format("2017-0116165732")
