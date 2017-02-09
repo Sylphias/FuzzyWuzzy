@@ -1,4 +1,4 @@
-import subprocess,json,requests,time,random,datetime,sys,ast,re, thread, threading
+import subprocess,json,requests,time,random,datetime,sys,ast,re, thread, threading, __future__
 
 
 class RadamsaThread(threading.Thread):
@@ -71,7 +71,7 @@ def sendFuzzPacketOnly(url,endpoint,option,inputs_list,headers = {}):
     try:
         r = requests.put(url + endpoint + "1" + option, data=json.dumps(fuzz_data, ensure_ascii=False), headers=headers)
     except requests.exceptions.RequestException as e:
-        print e.message
+        print(e.message)
 
 
 
@@ -121,7 +121,7 @@ def generate_excel_format(timestamp):
             o.flush()
 
     except IOError as inst:
-            print inst
+            print(inst)
     o.close()
 
 
