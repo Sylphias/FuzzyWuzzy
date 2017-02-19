@@ -26,7 +26,6 @@ class RadamsaThread(threading.Thread):
 # This method is used to generate the fuzzing inputs to be used on the endpoint of the device. note that it can be customized based on a set of input list
 def generate_hue_inputs(input_list):
     #  URL and token for local access
-    # http: // 192.168.2.139/api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/1/state
     hue_inputs = {}
     # Generate all the possible random outputs for each possible input for philips HUE api endpoint to the bridge
     for key,value in input_list.iteritems():
@@ -94,36 +93,9 @@ def write_format(file_input,url,endpoint,option,data,headers):
 
 
 
-
-def generate_excel_format(timestamp):
-    try:
-        o = open("fuzzlog_excel"+timestamp+ ".txt","w+")
-        logfile = open("fuzzlog_" + timestamp + ".txt", "r+")
-        o.write("endpoint\tinput\tresult\tfull_contents\n")
-        for line in logfile.readlines():
-            try:
-                decoded_line = ast.literal_eval(line)
-                input_data = decoded_line['data']
-                output_data = decoded_line['contents']
-                # The order in which the input is given is the same order as the output data (ASSUMPTION FROM DATA COLLECTED, to make code more efficient)
-                count = 0
-                for key,value in input_data.iteritems():
-                    items = output_data[0].keys()[0] if hasattr(output_data[0], 'keys') else output_data
-                    output = output_data[count] if len(output_data)-1 > count else output_data
-                    o.write(key+"\t"+repr(value)+"\t"+repr(items)+"\t"+str(output)+'\n')
-                    count += 1
-            except SyntaxError:
-                ur_pattern = re.compile(r'((UNEXPECTED RESPONSE).*|(CONNECTION ERROR)).*')
-                data_pattern = re.compile(r'\'data\':(.*),')
-                ur_matched = ur_pattern.findall(line)
-                data_matched = data_pattern.findall(line)
-                o.write("Failed Packet \t Failed\t "+str(ur_matched)+"\t"+repr(str(data_matched))+"\n")
-            o.flush()
-
-    except IOError as inst:
-            print(inst)
-    o.close()
-
+def radamsa(options, payloadfile):
+    file = open(payloadfile,"r")
+    
 
 if __name__ == "__main__" :
     # this is to store the types of input that we will be fuzzing and generate variations of these inputs
@@ -139,11 +111,9 @@ if __name__ == "__main__" :
             inputs_list = {"bri": bri, "on": on, "hue": hue, "sat": sat}
             send_hue_packet('http://192.168.2.139/', 'api/zLcVDH439gTV3VGebD-s7XhS4DTvAAupN7VDGhIw/lights/', '/state',inputs_list,timestart)
         except (KeyboardInterrupt, SystemExit):
-            # threadlock = threading.Lock()
-            # threadlock.acquire()
             generate_excel_format(timestart)
             for fuzzThread in fuzz_threads:
                 fuzzThread.stop()
-            # threadlock.release()
             break
+
     # generate_excel_format("2017-028203243")
