@@ -1,5 +1,5 @@
 from antiparser import *
-import subprocess,json,requests,time,random,datetime,sys,ast,re, thread, threading, __future__
+import subprocess,json,requests,time,random,datetime,sys,ast,re, _thread, threading, __future__
 
 class RadamsaThread(threading.Thread):
     def __init__(self,number):
@@ -26,7 +26,7 @@ class RadamsaThread(threading.Thread):
 # This method is used to generate the fuzzing inputs to be used on the endpoint of the device. note that it can be customized based on a set of input list
 def generate_hue_inputs(input_list):
     hue_inputs = {}
-    for key,value in input_list.iteritems():
+    for key,value in input_list.items():
         if type(value) == bool:
             hue_inputs[key] = []
             for x in range(100):
